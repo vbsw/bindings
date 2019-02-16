@@ -34,11 +34,11 @@ func (booleanValue *tBoolean) AddListener(listener BooleanListener) {
 	}
 }
 
-func (booleanValueA *tBoolean) And(booleanValueB Boolean) Boolean {
+func (booleanValue *tBoolean) And(booleanValueB Boolean) Boolean {
 	booleanValueAnd := new(tBooleanAnd)
-	booleanValueAnd.parentA = booleanValueA
+	booleanValueAnd.parentA = booleanValue
 	booleanValueAnd.parentB = booleanValueB
-	booleanValueA.AddListener(booleanValueAnd)
+	booleanValue.AddListener(booleanValueAnd)
 	booleanValueB.AddListener(booleanValueAnd)
 	return booleanValueAnd
 }
@@ -49,11 +49,11 @@ func (booleanValue *tBoolean) Not() Boolean {
 	return booleanValueNot
 }
 
-func (booleanValueA *tBoolean) Or(booleanValueB Boolean) Boolean {
+func (booleanValue *tBoolean) Or(booleanValueB Boolean) Boolean {
 	booleanValueOr := new(tBooleanOr)
-	booleanValueOr.parentA = booleanValueA
+	booleanValueOr.parentA = booleanValue
 	booleanValueOr.parentB = booleanValueB
-	booleanValueA.AddListener(booleanValueOr)
+	booleanValue.AddListener(booleanValueOr)
 	booleanValueB.AddListener(booleanValueOr)
 	return booleanValueOr
 }
