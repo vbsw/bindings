@@ -16,3 +16,19 @@ func containsBooleanListener(list []BooleanListener, key BooleanListener) bool {
 	}
 	return false
 }
+
+// indexBooleanListener returns index of key in list. If list does not contain key, returns -1.
+func indexBooleanListener(list []BooleanListener, key BooleanListener) int {
+	for i, currentKey := range list {
+		if currentKey == key {
+			return i
+		}
+	}
+	return -1
+}
+
+// removeBooleanListener removes an entry from list.
+func removeBooleanListener(list []BooleanListener, index int) []BooleanListener {
+	copy(list[index:], list[index+1:])
+	return list[:len(list)-1]
+}

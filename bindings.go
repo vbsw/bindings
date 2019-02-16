@@ -14,44 +14,14 @@ type CycleChecker interface {
 	CheckCycle(CycleChecker)
 }
 
-type BooleanListener interface {
-	BooleanChanged(bool, bool)
-}
-
 type Boolean interface {
 	AddListener(BooleanListener)
+	Not() Boolean
+	RemoveListener(BooleanListener)
 	Set(bool)
 	Value() bool
 }
 
-type tBooleanValue struct {
-	listeners []BooleanListener
-	value     bool
-}
-
-func (booleanValue *tBooleanValue) AddListener(listener BooleanListener) {
-	if !containsBooleanListener(booleanValue.listeners, listener) {
-		booleanValue.listeners = append(booleanValue.listeners, listener)
-	}
-}
-
-func (booleanValue *tBooleanValue) Set(b bool) {
-	if booleanValue.value != b {
-		for _, listener := range booleanValue.listeners {
-			listener.BooleanChanged(booleanValue.value, b)
-		}
-		booleanValue.value = b
-	}
-}
-
-func (booleanValue *tBooleanValue) CheckCycle(checker CycleChecker) {
-}
-
-func (booleanValue *tBooleanValue) Value() bool {
-	return booleanValue.value
-}
-
-func NewBoolean() Boolean {
-	booleanValue := new(tBooleanValue)
-	return booleanValue
+type BooleanListener interface {
+	BooleanChanged(Boolean, bool, bool)
 }

@@ -15,14 +15,14 @@ type testBooleanListener struct {
 	newValue bool
 }
 
-func (booleanListener *testBooleanListener) BooleanChanged(oldValue, newValue bool) {
+func (booleanListener *testBooleanListener) BooleanChanged(observable Boolean, oldValue, newValue bool) {
 	booleanListener.called = true
 	booleanListener.oldValue = oldValue
 	booleanListener.newValue = newValue
 }
 
 func TestBooleanValueAddListener(t *testing.T) {
-	booleanValue := new(tBooleanValue)
+	booleanValue := new(tBoolean)
 	booleanListener := new(testBooleanListener)
 
 	booleanValue.AddListener(booleanListener)
@@ -37,7 +37,7 @@ func TestBooleanValueAddListener(t *testing.T) {
 }
 
 func TestBooleanValueSet(t *testing.T) {
-	booleanValue := new(tBooleanValue)
+	booleanValue := new(tBoolean)
 
 	if booleanValue.Value() != false {
 		t.Error(booleanValue.Value())
@@ -50,7 +50,7 @@ func TestBooleanValueSet(t *testing.T) {
 }
 
 func TestBooleanValueBooleanChanged(t *testing.T) {
-	booleanValue := new(tBooleanValue)
+	booleanValue := new(tBoolean)
 	booleanListener := new(testBooleanListener)
 
 	booleanValue.AddListener(booleanListener)
@@ -75,6 +75,40 @@ func TestBooleanValueBooleanChanged(t *testing.T) {
 		t.Error(booleanListener.oldValue)
 	}
 	if booleanListener.newValue != false {
+		t.Error(booleanListener.newValue)
+	}
+}
+
+func TestBooleanValueNot(t *testing.T) {
+	booleanValue := new(tBoolean)
+	booleanValueNot := booleanValue.Not()
+	booleanListener := new(testBooleanListener)
+
+	booleanValueNot.AddListener(booleanListener)
+	booleanValue.Set(false)
+	if booleanListener.called != false {
+		t.Error(booleanListener.called)
+	}
+
+	booleanValue.Set(true)
+	if booleanValueNot.Value() != false {
+		t.Error(booleanValueNot.Value())
+	}
+	if booleanListener.oldValue != false {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != false {
+		t.Error(booleanListener.newValue)
+	}
+
+	booleanValue.Set(false)
+	if booleanValueNot.Value() != true {
+		t.Error(booleanValueNot.Value())
+	}
+	if booleanListener.oldValue != false {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != true {
 		t.Error(booleanListener.newValue)
 	}
 }
