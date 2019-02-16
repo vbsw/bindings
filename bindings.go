@@ -29,6 +29,12 @@ type BooleanFilter interface {
 	FilterBoolean(Boolean, bool, bool) bool
 }
 
+// BooleanListener is a listener for the observable Boolean. Function BooleanChanged is called
+// only when observable value has changed, i.e. new value is not equal to old value.
+type BooleanListener interface {
+	BooleanChanged(Boolean, bool, bool)
+}
+
 // Float64 is an observable value.
 type Float64 interface {
 	AddListener(Float64Listener)
@@ -53,16 +59,40 @@ type Float64Filter interface {
 	FilterFloat64(Float64, float64, float64) float64
 }
 
-// BooleanListener is a listener for the observable Boolean. Function BooleanChanged is called
-// only when observable value has changed, i.e. new value is not equal to old value.
-type BooleanListener interface {
-	BooleanChanged(Boolean, bool, bool)
-}
-
 // Float64Listener is a listener for the observable Float64. Function Float64Changed is called
 // only when observable value has changed, i.e. new value is not equal to old value.
 type Float64Listener interface {
 	Float64Changed(Float64, float64, float64)
+}
+
+// Int is an observable value.
+type Int interface {
+	AddListener(IntListener)
+	Divide(Int) Int
+	EqualTo(Int) Boolean
+	GreaterThan(Int) Boolean
+	GreaterThanOrEqualTo(Int) Boolean
+	LessThan(Int) Boolean
+	LessThanOrEqualTo(Int) Boolean
+	Minus(Int) Int
+	Multiply(Int) Int
+	NotEqualTo(Int) Boolean
+	Plus(Int) Int
+	RemoveListener(IntListener)
+	Set(int)
+	SetFilter(IntFilter)
+	Value() int
+}
+
+// IntFilter provides a function that is called before setting the value of Int.
+type IntFilter interface {
+	FilterInt(Int, int, int) int
+}
+
+// IntListener is a listener for the observable Int. Function IntChanged is called
+// only when observable value has changed, i.e. new value is not equal to old value.
+type IntListener interface {
+	IntChanged(Int, int, int)
 }
 
 // NewBoolean creates the observable Boolean and returns it.
@@ -89,4 +119,17 @@ func NewFloat64(params ...interface{}) Float64 {
 		}
 	}
 	return float64Value
+}
+
+// NewInt creates the observable Int and returns it.
+func NewInt(params ...interface{}) Int {
+	intValue := new(tInt)
+	for _, param := range params {
+		if filter, ok := param.(IntFilter); ok {
+			intValue.filter = filter
+		} else {
+			intValue.value = toIntCtor(param)
+		}
+	}
+	return intValue
 }

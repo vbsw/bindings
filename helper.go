@@ -27,6 +27,16 @@ func containsFloat64Listener(list []Float64Listener, key Float64Listener) bool {
 	return false
 }
 
+// containsIntListener returns true, if list contains key.
+func containsIntListener(list []IntListener, key IntListener) bool {
+	for _, currentKey := range list {
+		if currentKey == key {
+			return true
+		}
+	}
+	return false
+}
+
 // indexBooleanListener returns index of key in list. If list does not contain key, returns -1.
 func indexBooleanListener(list []BooleanListener, key BooleanListener) int {
 	for i, currentKey := range list {
@@ -47,6 +57,16 @@ func indexFloat64Listener(list []Float64Listener, key Float64Listener) int {
 	return -1
 }
 
+// indexIntListener returns index of key in list. If list does not contain key, returns -1.
+func indexIntListener(list []IntListener, key IntListener) int {
+	for i, currentKey := range list {
+		if currentKey == key {
+			return i
+		}
+	}
+	return -1
+}
+
 // removeBooleanListener removes an entry from list.
 func removeBooleanListener(list []BooleanListener, index int) []BooleanListener {
 	copy(list[index:], list[index+1:])
@@ -55,6 +75,12 @@ func removeBooleanListener(list []BooleanListener, index int) []BooleanListener 
 
 // removeFloat64Listener removes an entry from list.
 func removeFloat64Listener(list []Float64Listener, index int) []Float64Listener {
+	copy(list[index:], list[index+1:])
+	return list[:len(list)-1]
+}
+
+// removeIntListener removes an entry from list.
+func removeIntListener(list []IntListener, index int) []IntListener {
 	copy(list[index:], list[index+1:])
 	return list[:len(list)-1]
 }
@@ -86,4 +112,33 @@ func toFloat64Ctor(value interface{}) float64 {
 		return float64(typedValue)
 	}
 	return 0.0
+}
+
+func toIntCtor(value interface{}) int {
+	if typedValue, ok := value.(int); ok {
+		return int(typedValue)
+	} else if typedValue, ok := value.(float64); ok {
+		return int(typedValue)
+	} else if typedValue, ok := value.(float32); ok {
+		return int(typedValue)
+	} else if typedValue, ok := value.(uint); ok {
+		return int(typedValue)
+	} else if typedValue, ok := value.(int64); ok {
+		return int(typedValue)
+	} else if typedValue, ok := value.(int32); ok {
+		return int(typedValue)
+	} else if typedValue, ok := value.(int16); ok {
+		return int(typedValue)
+	} else if typedValue, ok := value.(int8); ok {
+		return int(typedValue)
+	} else if typedValue, ok := value.(uint64); ok {
+		return int(typedValue)
+	} else if typedValue, ok := value.(uint32); ok {
+		return int(typedValue)
+	} else if typedValue, ok := value.(uint16); ok {
+		return int(typedValue)
+	} else if typedValue, ok := value.(uint8); ok {
+		return int(typedValue)
+	}
+	return 0
 }
