@@ -103,8 +103,3 @@ func (booleanValue *tBooleanOr) BooleanChanged(observable Boolean, oldValue, new
 		booleanValue.updateValue(booleanValue.parentA.Value() || newValue)
 	}
 }
-
-func NewBoolean() Boolean {
-	booleanValue := new(tBoolean)
-	return booleanValue
-}
