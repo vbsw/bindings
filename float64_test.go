@@ -38,9 +38,9 @@ func TestFloat64ValueAddListener(t *testing.T) {
 
 func TestFloat64ValueSet(t *testing.T) {
 	float64Value := new(tFloat64)
-	initialValue := float64Value.value
+	float64Value.value = 0
 
-	if float64Value.Value() != initialValue {
+	if float64Value.Value() != 0 {
 		t.Error(float64Value.Value())
 	}
 
@@ -53,10 +53,10 @@ func TestFloat64ValueSet(t *testing.T) {
 func TestFloat64ValueFloat64Changed(t *testing.T) {
 	float64Value := new(tFloat64)
 	float64Listener := new(testFloat64Listener)
-	initialValue := float64Value.value
+	float64Value.value = 0
 
 	float64Value.AddListener(float64Listener)
-	float64Value.Set(initialValue)
+	float64Value.Set(0)
 	if float64Listener.called != false {
 		t.Error(float64Listener.called)
 	}
@@ -65,7 +65,7 @@ func TestFloat64ValueFloat64Changed(t *testing.T) {
 	if float64Listener.called != true {
 		t.Error(float64Listener.called)
 	}
-	if float64Listener.oldValue != initialValue {
+	if float64Listener.oldValue != 0 {
 		t.Error(float64Listener.oldValue)
 	}
 	if float64Listener.newValue != 10 {
@@ -84,8 +84,8 @@ func TestFloat64ValueFloat64Changed(t *testing.T) {
 func TestFloat64ValueDivide(t *testing.T) {
 	float64ValueA := new(tFloat64)
 	float64ValueB := new(tFloat64)
-	float64ValueA.Set(1)
-	float64ValueB.Set(1)
+	float64ValueA.value = 1
+	float64ValueB.value = 1
 
 	float64ValueDivide := float64ValueA.Divide(float64ValueB)
 	float64Listener := new(testFloat64Listener)
@@ -123,12 +123,12 @@ func TestFloat64ValueEqualTo(t *testing.T) {
 	float64ValueB := new(tFloat64)
 	booleanValueEqual := float64ValueA.EqualTo(float64ValueB)
 	booleanListener := new(testBooleanListener)
-	initialValueA := float64ValueA.value
-	initialValueB := float64ValueB.value
+	float64ValueA.value = 0
+	float64ValueB.value = 0
 
 	booleanValueEqual.AddListener(booleanListener)
-	float64ValueA.Set(initialValueA)
-	float64ValueB.Set(initialValueB)
+	float64ValueA.Set(0)
+	float64ValueB.Set(0)
 	if booleanValueEqual.Value() != false {
 		t.Error(booleanValueEqual.Value())
 	}
@@ -167,12 +167,12 @@ func TestFloat64ValueGreaterThan(t *testing.T) {
 	float64ValueB := new(tFloat64)
 	booleanValueGreater := float64ValueA.GreaterThan(float64ValueB)
 	booleanListener := new(testBooleanListener)
-	initialValueA := float64ValueA.value
-	initialValueB := float64ValueB.value
+	float64ValueA.value = 0
+	float64ValueB.value = 0
 
 	booleanValueGreater.AddListener(booleanListener)
-	float64ValueA.Set(initialValueA)
-	float64ValueB.Set(initialValueB)
+	float64ValueA.Set(0)
+	float64ValueB.Set(0)
 	if booleanValueGreater.Value() != false {
 		t.Error(booleanValueGreater.Value())
 	}
@@ -287,8 +287,8 @@ func TestFloat64ValueMinus(t *testing.T) {
 func TestFloat64ValueMultiply(t *testing.T) {
 	float64ValueA := new(tFloat64)
 	float64ValueB := new(tFloat64)
-	float64ValueA.Set(0)
-	float64ValueB.Set(0)
+	float64ValueA.value = 0
+	float64ValueB.value = 0
 
 	float64ValueMultiply := float64ValueA.Multiply(float64ValueB)
 	float64Listener := new(testFloat64Listener)
@@ -318,14 +318,14 @@ func TestFloat64ValueMultiply(t *testing.T) {
 func TestFloat64ValueNotEqualTo(t *testing.T) {
 	float64ValueA := new(tFloat64)
 	float64ValueB := new(tFloat64)
+	float64ValueA.value = 0
+	float64ValueB.value = 0
 	booleanValueNotEqual := float64ValueA.NotEqualTo(float64ValueB)
 	booleanListener := new(testBooleanListener)
-	initialValueA := float64ValueA.value
-	initialValueB := float64ValueB.value
 
 	booleanValueNotEqual.AddListener(booleanListener)
-	float64ValueA.Set(initialValueA)
-	float64ValueB.Set(initialValueB)
+	float64ValueA.Set(0)
+	float64ValueB.Set(0)
 	if booleanValueNotEqual.Value() != false {
 		t.Error(booleanValueNotEqual.Value())
 	}

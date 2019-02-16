@@ -58,3 +58,32 @@ func removeFloat64Listener(list []Float64Listener, index int) []Float64Listener 
 	copy(list[index:], list[index+1:])
 	return list[:len(list)-1]
 }
+
+func toFloat64Ctor(value interface{}) float64 {
+	if typedValue, ok := value.(int); ok {
+		return float64(typedValue)
+	} else if typedValue, ok := value.(float64); ok {
+		return float64(typedValue)
+	} else if typedValue, ok := value.(float32); ok {
+		return float64(typedValue)
+	} else if typedValue, ok := value.(uint); ok {
+		return float64(typedValue)
+	} else if typedValue, ok := value.(int64); ok {
+		return float64(typedValue)
+	} else if typedValue, ok := value.(int32); ok {
+		return float64(typedValue)
+	} else if typedValue, ok := value.(int16); ok {
+		return float64(typedValue)
+	} else if typedValue, ok := value.(int8); ok {
+		return float64(typedValue)
+	} else if typedValue, ok := value.(uint64); ok {
+		return float64(typedValue)
+	} else if typedValue, ok := value.(uint32); ok {
+		return float64(typedValue)
+	} else if typedValue, ok := value.(uint16); ok {
+		return float64(typedValue)
+	} else if typedValue, ok := value.(uint8); ok {
+		return float64(typedValue)
+	}
+	return 0.0
+}

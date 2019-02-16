@@ -10,6 +10,7 @@ package bindings
 type tFloat64 struct {
 	listeners []Float64Listener
 	value     float64
+	filter    Float64Filter
 }
 
 type tFloat64AB struct {
@@ -168,8 +169,11 @@ func (float64Value *tFloat64) RemoveListener(listener Float64Listener) {
 }
 
 func (float64Value *tFloat64) Set(newValue float64) {
+	oldValue := float64Value.value
+	if float64Value.filter != nil {
+		newValue = float64Value.filter.FilterFloat64(float64Value, oldValue, newValue)
+	}
 	if float64Value.value != newValue {
-		oldValue := float64Value.value
 		observable := Float64(float64Value)
 		float64Value.value = newValue
 		for _, listener := range float64Value.listeners {
@@ -178,8 +182,15 @@ func (float64Value *tFloat64) Set(newValue float64) {
 	}
 }
 
+func (float64Value *tFloat64) SetFilter(filter Float64Filter) {
+	float64Value.filter = filter
+}
+
 func (float64Value *tFloat64) Value() float64 {
 	return float64Value.value
+}
+
+func (float64Value *tFloat64) initValueFromOtherTypes(untypedValue interface{}) {
 }
 
 func (float64Value *tFloat64Divide) Float64Changed(observable Float64, oldValue, newValue float64) {

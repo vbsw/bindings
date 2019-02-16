@@ -7,7 +7,7 @@
 
 // Package bindings provides bindings for values.
 //
-// Version 0.2.0.
+// Version 0.3.0.
 package bindings
 
 // Boolean is an observable value.
@@ -20,7 +20,13 @@ type Boolean interface {
 	Or(Boolean) Boolean
 	RemoveListener(BooleanListener)
 	Set(bool)
+	SetFilter(BooleanFilter)
 	Value() bool
+}
+
+// BooleanFilter provides a function that is called before setting the value of Boolean.
+type BooleanFilter interface {
+	FilterBoolean(Boolean, bool, bool) bool
 }
 
 // Float64 is an observable value.
@@ -38,7 +44,13 @@ type Float64 interface {
 	Plus(Float64) Float64
 	RemoveListener(Float64Listener)
 	Set(float64)
+	SetFilter(Float64Filter)
 	Value() float64
+}
+
+// Float64Filter provides a function that is called before setting the value of Float64.
+type Float64Filter interface {
+	FilterFloat64(Float64, float64, float64) float64
 }
 
 // BooleanListener is a listener for the observable Boolean. Function BooleanChanged is called
@@ -54,7 +66,27 @@ type Float64Listener interface {
 }
 
 // NewBoolean creates the observable Boolean and returns it.
-func NewBoolean() Boolean {
+func NewBoolean(params ...interface{}) Boolean {
 	booleanValue := new(tBoolean)
+	for _, param := range params {
+		if b, ok := param.(bool); ok {
+			booleanValue.value = b
+		} else if filter, ok := param.(BooleanFilter); ok {
+			booleanValue.filter = filter
+		}
+	}
 	return booleanValue
+}
+
+// NewFloat64 creates the observable Float64 and returns it.
+func NewFloat64(params ...interface{}) Float64 {
+	float64Value := new(tFloat64)
+	for _, param := range params {
+		if filter, ok := param.(Float64Filter); ok {
+			float64Value.filter = filter
+		} else {
+			float64Value.value = toFloat64Ctor(param)
+		}
+	}
+	return float64Value
 }

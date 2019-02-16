@@ -10,6 +10,7 @@ package bindings
 type tBoolean struct {
 	listeners []BooleanListener
 	value     bool
+	filter    BooleanFilter
 }
 
 type tBooleanAB struct {
@@ -94,14 +95,21 @@ func (booleanValue *tBoolean) RemoveListener(listener BooleanListener) {
 }
 
 func (booleanValue *tBoolean) Set(newValue bool) {
-	if booleanValue.value != newValue {
-		oldValue := booleanValue.value
+	oldValue := booleanValue.value
+	if booleanValue.filter != nil {
+		newValue = booleanValue.filter.FilterBoolean(booleanValue, oldValue, newValue)
+	}
+	if oldValue != newValue {
 		observable := Boolean(booleanValue)
 		booleanValue.value = newValue
 		for _, listener := range booleanValue.listeners {
 			listener.BooleanChanged(observable, oldValue, newValue)
 		}
 	}
+}
+
+func (booleanValue *tBoolean) SetFilter(filter BooleanFilter) {
+	booleanValue.filter = filter
 }
 
 func (booleanValue *tBoolean) Value() bool {
