@@ -284,6 +284,37 @@ func TestFloat64ValueMinus(t *testing.T) {
 	}
 }
 
+func TestFloat64ValueMultiply(t *testing.T) {
+	float64ValueA := new(tFloat64)
+	float64ValueB := new(tFloat64)
+	float64ValueA.Set(0)
+	float64ValueB.Set(0)
+
+	float64ValueMultiply := float64ValueA.Multiply(float64ValueB)
+	float64Listener := new(testFloat64Listener)
+
+	float64ValueMultiply.AddListener(float64Listener)
+	if float64Listener.called != false {
+		t.Error(float64Listener.called)
+	}
+
+	float64ValueA.Set(10)
+	if float64Listener.called != false {
+		t.Error(float64Listener.called)
+	}
+
+	float64ValueB.Set(2)
+	if float64Listener.called != true {
+		t.Error(float64Listener.called)
+	}
+	if float64ValueMultiply.Value() != 20 {
+		t.Error(float64ValueMultiply.Value())
+	}
+	if float64Listener.newValue != 20 {
+		t.Error(float64Listener.newValue)
+	}
+}
+
 func TestFloat64ValueNotEqualTo(t *testing.T) {
 	float64ValueA := new(tFloat64)
 	float64ValueB := new(tFloat64)
