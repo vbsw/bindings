@@ -12,6 +12,12 @@ type tBoolean struct {
 	value     bool
 }
 
+type tBooleanAnd struct {
+	tBoolean
+	parentA Boolean
+	parentB Boolean
+}
+
 type tBooleanNot struct {
 	tBoolean
 }
@@ -22,7 +28,13 @@ func (booleanValue *tBoolean) AddListener(listener BooleanListener) {
 	}
 }
 
-func (booleanValue *tBoolean) CheckCycle(checker CycleChecker) {
+func (booleanValueA *tBoolean) And(booleanValueB Boolean) Boolean {
+	booleanValueAnd := new(tBooleanAnd)
+	booleanValueAnd.parentA = booleanValueA
+	booleanValueAnd.parentB = booleanValueB
+	booleanValueA.AddListener(booleanValueAnd)
+	booleanValueB.AddListener(booleanValueAnd)
+	return booleanValueAnd
 }
 
 func (booleanValue *tBoolean) Not() Boolean {
@@ -55,6 +67,14 @@ func (booleanValue *tBoolean) updateValue(newValue bool) {
 
 func (booleanValue *tBoolean) Value() bool {
 	return booleanValue.value
+}
+
+func (booleanValue *tBooleanAnd) BooleanChanged(observable Boolean, oldValue, newValue bool) {
+	if booleanValue.parentA == observable {
+		booleanValue.updateValue(booleanValue.parentB.Value() && newValue)
+	} else {
+		booleanValue.updateValue(booleanValue.parentA.Value() && newValue)
+	}
 }
 
 func (booleanValue *tBooleanNot) BooleanChanged(observable Boolean, oldValue, newValue bool) {

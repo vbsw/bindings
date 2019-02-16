@@ -79,6 +79,48 @@ func TestBooleanValueBooleanChanged(t *testing.T) {
 	}
 }
 
+func TestBooleanValueAnd(t *testing.T) {
+	booleanValueA := new(tBoolean)
+	booleanValueB := new(tBoolean)
+	booleanValueAnd := booleanValueA.And(booleanValueB)
+	booleanListener := new(testBooleanListener)
+
+	booleanValueAnd.AddListener(booleanListener)
+	booleanValueA.Set(false)
+	booleanValueB.Set(false)
+	if booleanValueAnd.Value() != false {
+		t.Error(booleanValueAnd.Value())
+	}
+	if booleanListener.called != false {
+		t.Error(booleanListener.called)
+	}
+
+	booleanValueA.Set(true)
+	if booleanValueAnd.Value() != false {
+		t.Error(booleanValueAnd.Value())
+	}
+	if booleanListener.called != true {
+		t.Error(booleanListener.called)
+	}
+	if booleanListener.oldValue != false {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != false {
+		t.Error(booleanListener.newValue)
+	}
+
+	booleanValueB.Set(true)
+	if booleanValueAnd.Value() != true {
+		t.Error(booleanValueAnd.Value())
+	}
+	if booleanListener.oldValue != false {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != true {
+		t.Error(booleanListener.newValue)
+	}
+}
+
 func TestBooleanValueNot(t *testing.T) {
 	booleanValue := new(tBoolean)
 	booleanValueNot := booleanValue.Not()
@@ -86,6 +128,9 @@ func TestBooleanValueNot(t *testing.T) {
 
 	booleanValueNot.AddListener(booleanListener)
 	booleanValue.Set(false)
+	if booleanValueNot.Value() != false {
+		t.Error(booleanValueNot.Value())
+	}
 	if booleanListener.called != false {
 		t.Error(booleanListener.called)
 	}

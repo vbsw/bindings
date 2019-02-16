@@ -16,6 +16,7 @@ type CycleChecker interface {
 
 type Boolean interface {
 	AddListener(BooleanListener)
+	And(Boolean) Boolean
 	Not() Boolean
 	RemoveListener(BooleanListener)
 	Set(bool)
