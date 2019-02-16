@@ -65,6 +65,36 @@ type Float64Listener interface {
 	Float64Changed(Float64, float64, float64)
 }
 
+// Float32 is an observable value.
+type Float32 interface {
+	AddListener(Float32Listener)
+	Divide(Float32) Float32
+	EqualTo(Float32) Boolean
+	GreaterThan(Float32) Boolean
+	GreaterThanOrEqualTo(Float32) Boolean
+	LessThan(Float32) Boolean
+	LessThanOrEqualTo(Float32) Boolean
+	Minus(Float32) Float32
+	Multiply(Float32) Float32
+	NotEqualTo(Float32) Boolean
+	Plus(Float32) Float32
+	RemoveListener(Float32Listener)
+	Set(float32)
+	SetFilter(Float32Filter)
+	Value() float32
+}
+
+// Float32Filter provides a function that is called before setting the value of Float32.
+type Float32Filter interface {
+	FilterFloat32(Float32, float32, float32) float32
+}
+
+// Float32Listener is a listener for the observable Float32. Function Float32Changed is called
+// only when observable value has changed, i.e. new value is not equal to old value.
+type Float32Listener interface {
+	Float32Changed(Float32, float32, float32)
+}
+
 // Int is an observable value.
 type Int interface {
 	AddListener(IntListener)
@@ -149,6 +179,19 @@ func NewFloat64(params ...interface{}) Float64 {
 	return float64Value
 }
 
+// NewFloat32 creates the observable Float32 and returns it.
+func NewFloat32(params ...interface{}) Float32 {
+	float32Value := new(tFloat32)
+	for _, param := range params {
+		if filter, ok := param.(Float32Filter); ok {
+			float32Value.filter = filter
+		} else {
+			float32Value.value = toFloat32Ctor(param)
+		}
+	}
+	return float32Value
+}
+
 // NewInt creates the observable Int and returns it.
 func NewInt(params ...interface{}) Int {
 	intValue := new(tInt)
@@ -160,4 +203,15 @@ func NewInt(params ...interface{}) Int {
 		}
 	}
 	return intValue
+}
+
+// NewString creates the observable String and returns it.
+func NewString(params ...interface{}) String {
+	stringValue := new(tString)
+	for _, param := range params {
+		if filter, ok := param.(StringFilter); ok {
+			stringValue.filter = filter
+		}
+	}
+	return stringValue
 }
