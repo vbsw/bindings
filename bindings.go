@@ -10,14 +10,11 @@
 // Version 0.1.0.
 package bindings
 
-type CycleChecker interface {
-	CheckCycle(CycleChecker)
-}
-
 type Boolean interface {
 	AddListener(BooleanListener)
 	And(Boolean) Boolean
 	Not() Boolean
+	Or(Boolean) Boolean
 	RemoveListener(BooleanListener)
 	Set(bool)
 	Value() bool

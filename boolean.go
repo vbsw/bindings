@@ -22,6 +22,12 @@ type tBooleanNot struct {
 	tBoolean
 }
 
+type tBooleanOr struct {
+	tBoolean
+	parentA Boolean
+	parentB Boolean
+}
+
 func (booleanValue *tBoolean) AddListener(listener BooleanListener) {
 	if !containsBooleanListener(booleanValue.listeners, listener) {
 		booleanValue.listeners = append(booleanValue.listeners, listener)
@@ -41,6 +47,15 @@ func (booleanValue *tBoolean) Not() Boolean {
 	booleanValueNot := new(tBooleanNot)
 	booleanValue.AddListener(booleanValueNot)
 	return booleanValueNot
+}
+
+func (booleanValueA *tBoolean) Or(booleanValueB Boolean) Boolean {
+	booleanValueOr := new(tBooleanOr)
+	booleanValueOr.parentA = booleanValueA
+	booleanValueOr.parentB = booleanValueB
+	booleanValueA.AddListener(booleanValueOr)
+	booleanValueB.AddListener(booleanValueOr)
+	return booleanValueOr
 }
 
 func (booleanValue *tBoolean) RemoveListener(listener BooleanListener) {
@@ -79,6 +94,14 @@ func (booleanValue *tBooleanAnd) BooleanChanged(observable Boolean, oldValue, ne
 
 func (booleanValue *tBooleanNot) BooleanChanged(observable Boolean, oldValue, newValue bool) {
 	booleanValue.updateValue(!newValue)
+}
+
+func (booleanValue *tBooleanOr) BooleanChanged(observable Boolean, oldValue, newValue bool) {
+	if booleanValue.parentA == observable {
+		booleanValue.updateValue(booleanValue.parentB.Value() || newValue)
+	} else {
+		booleanValue.updateValue(booleanValue.parentA.Value() || newValue)
+	}
 }
 
 func NewBoolean() Boolean {

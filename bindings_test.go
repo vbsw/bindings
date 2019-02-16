@@ -157,3 +157,57 @@ func TestBooleanValueNot(t *testing.T) {
 		t.Error(booleanListener.newValue)
 	}
 }
+
+func TestBooleanValueOr(t *testing.T) {
+	booleanValueA := new(tBoolean)
+	booleanValueB := new(tBoolean)
+	booleanValueOr := booleanValueA.Or(booleanValueB)
+	booleanListener := new(testBooleanListener)
+
+	booleanValueOr.AddListener(booleanListener)
+	booleanValueA.Set(false)
+	booleanValueB.Set(false)
+	if booleanValueOr.Value() != false {
+		t.Error(booleanValueOr.Value())
+	}
+	if booleanListener.called != false {
+		t.Error(booleanListener.called)
+	}
+
+	booleanValueA.Set(true)
+	if booleanValueOr.Value() != true {
+		t.Error(booleanValueOr.Value())
+	}
+	if booleanListener.called != true {
+		t.Error(booleanListener.called)
+	}
+	if booleanListener.oldValue != false {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != true {
+		t.Error(booleanListener.newValue)
+	}
+
+	booleanValueB.Set(true)
+	if booleanValueOr.Value() != true {
+		t.Error(booleanValueOr.Value())
+	}
+	if booleanListener.oldValue != true {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != true {
+		t.Error(booleanListener.newValue)
+	}
+
+	booleanValueA.Set(false)
+	booleanValueB.Set(false)
+	if booleanValueOr.Value() != false {
+		t.Error(booleanValueOr.Value())
+	}
+	if booleanListener.oldValue != true {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != false {
+		t.Error(booleanListener.newValue)
+	}
+}
