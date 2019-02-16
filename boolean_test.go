@@ -99,7 +99,7 @@ func TestBooleanValueAnd(t *testing.T) {
 	if booleanValueAnd.Value() != false {
 		t.Error(booleanValueAnd.Value())
 	}
-	if booleanListener.called != true {
+	if booleanListener.called != false {
 		t.Error(booleanListener.called)
 	}
 	if booleanListener.oldValue != false {
@@ -110,8 +110,53 @@ func TestBooleanValueAnd(t *testing.T) {
 	}
 
 	booleanValueB.Set(true)
+	if booleanListener.called != true {
+		t.Error(booleanListener.called)
+	}
 	if booleanValueAnd.Value() != true {
 		t.Error(booleanValueAnd.Value())
+	}
+	if booleanListener.oldValue != false {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != true {
+		t.Error(booleanListener.newValue)
+	}
+}
+
+func TestBooleanValueEqualTo(t *testing.T) {
+	booleanValueA := new(tBoolean)
+	booleanValueB := new(tBoolean)
+	booleanValueEqual := booleanValueA.EqualTo(booleanValueB)
+	booleanListener := new(testBooleanListener)
+
+	booleanValueEqual.AddListener(booleanListener)
+	booleanValueA.Set(false)
+	booleanValueB.Set(false)
+	if booleanValueEqual.Value() != false {
+		t.Error(booleanValueEqual.Value())
+	}
+	if booleanListener.called != false {
+		t.Error(booleanListener.called)
+	}
+
+	booleanValueA.Set(true)
+	if booleanValueEqual.Value() != false {
+		t.Error(booleanValueEqual.Value())
+	}
+	if booleanListener.called != false {
+		t.Error(booleanListener.called)
+	}
+	if booleanListener.oldValue != false {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != false {
+		t.Error(booleanListener.newValue)
+	}
+
+	booleanValueB.Set(true)
+	if booleanValueEqual.Value() != true {
+		t.Error(booleanValueEqual.Value())
 	}
 	if booleanListener.oldValue != false {
 		t.Error(booleanListener.oldValue)
@@ -158,6 +203,48 @@ func TestBooleanValueNot(t *testing.T) {
 	}
 }
 
+func TestBooleanValueNotEqualTo(t *testing.T) {
+	booleanValueA := new(tBoolean)
+	booleanValueB := new(tBoolean)
+	booleanValueNotEqual := booleanValueA.NotEqualTo(booleanValueB)
+	booleanListener := new(testBooleanListener)
+
+	booleanValueNotEqual.AddListener(booleanListener)
+	booleanValueA.Set(false)
+	booleanValueB.Set(false)
+	if booleanValueNotEqual.Value() != false {
+		t.Error(booleanValueNotEqual.Value())
+	}
+	if booleanListener.called != false {
+		t.Error(booleanListener.called)
+	}
+
+	booleanValueA.Set(true)
+	if booleanValueNotEqual.Value() != true {
+		t.Error(booleanValueNotEqual.Value())
+	}
+	if booleanListener.called != true {
+		t.Error(booleanListener.called)
+	}
+	if booleanListener.oldValue != false {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != true {
+		t.Error(booleanListener.newValue)
+	}
+
+	booleanValueB.Set(true)
+	if booleanValueNotEqual.Value() != false {
+		t.Error(booleanValueNotEqual.Value())
+	}
+	if booleanListener.oldValue != true {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != false {
+		t.Error(booleanListener.newValue)
+	}
+}
+
 func TestBooleanValueOr(t *testing.T) {
 	booleanValueA := new(tBoolean)
 	booleanValueB := new(tBoolean)
@@ -192,7 +279,8 @@ func TestBooleanValueOr(t *testing.T) {
 	if booleanValueOr.Value() != true {
 		t.Error(booleanValueOr.Value())
 	}
-	if booleanListener.oldValue != true {
+	// booleanListener was not called, old value stays the same
+	if booleanListener.oldValue != false {
 		t.Error(booleanListener.oldValue)
 	}
 	if booleanListener.newValue != true {

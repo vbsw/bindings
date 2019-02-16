@@ -12,20 +12,30 @@ type tBoolean struct {
 	value     bool
 }
 
-type tBooleanAnd struct {
+type tBooleanAB struct {
 	tBoolean
 	parentA Boolean
 	parentB Boolean
+}
+
+type tBooleanAnd struct {
+	tBooleanAB
+}
+
+type tBooleanEqual struct {
+	tBooleanAB
 }
 
 type tBooleanNot struct {
 	tBoolean
 }
 
+type tBooleanNotEqual struct {
+	tBooleanAB
+}
+
 type tBooleanOr struct {
-	tBoolean
-	parentA Boolean
-	parentB Boolean
+	tBooleanAB
 }
 
 func (booleanValue *tBoolean) AddListener(listener BooleanListener) {
@@ -43,10 +53,28 @@ func (booleanValue *tBoolean) And(booleanValueB Boolean) Boolean {
 	return booleanValueAnd
 }
 
+func (booleanValue *tBoolean) EqualTo(booleanValueB Boolean) Boolean {
+	booleanValueEqual := new(tBooleanEqual)
+	booleanValueEqual.parentA = booleanValue
+	booleanValueEqual.parentB = booleanValueB
+	booleanValue.AddListener(booleanValueEqual)
+	booleanValueB.AddListener(booleanValueEqual)
+	return booleanValueEqual
+}
+
 func (booleanValue *tBoolean) Not() Boolean {
 	booleanValueNot := new(tBooleanNot)
 	booleanValue.AddListener(booleanValueNot)
 	return booleanValueNot
+}
+
+func (booleanValue *tBoolean) NotEqualTo(booleanValueB Boolean) Boolean {
+	booleanValueNotEqual := new(tBooleanNotEqual)
+	booleanValueNotEqual.parentA = booleanValue
+	booleanValueNotEqual.parentB = booleanValueB
+	booleanValue.AddListener(booleanValueNotEqual)
+	booleanValueB.AddListener(booleanValueNotEqual)
+	return booleanValueNotEqual
 }
 
 func (booleanValue *tBoolean) Or(booleanValueB Boolean) Boolean {
@@ -67,16 +95,12 @@ func (booleanValue *tBoolean) RemoveListener(listener BooleanListener) {
 
 func (booleanValue *tBoolean) Set(newValue bool) {
 	if booleanValue.value != newValue {
-		booleanValue.updateValue(newValue)
-	}
-}
-
-func (booleanValue *tBoolean) updateValue(newValue bool) {
-	oldValue := booleanValue.value
-	observable := Boolean(booleanValue)
-	booleanValue.value = newValue
-	for _, listener := range booleanValue.listeners {
-		listener.BooleanChanged(observable, oldValue, newValue)
+		oldValue := booleanValue.value
+		observable := Boolean(booleanValue)
+		booleanValue.value = newValue
+		for _, listener := range booleanValue.listeners {
+			listener.BooleanChanged(observable, oldValue, newValue)
+		}
 	}
 }
 
@@ -86,20 +110,36 @@ func (booleanValue *tBoolean) Value() bool {
 
 func (booleanValue *tBooleanAnd) BooleanChanged(observable Boolean, oldValue, newValue bool) {
 	if booleanValue.parentA == observable {
-		booleanValue.updateValue(booleanValue.parentB.Value() && newValue)
+		booleanValue.Set(booleanValue.parentB.Value() && newValue)
 	} else {
-		booleanValue.updateValue(booleanValue.parentA.Value() && newValue)
+		booleanValue.Set(booleanValue.parentA.Value() && newValue)
+	}
+}
+
+func (booleanValue *tBooleanEqual) BooleanChanged(observable Boolean, oldValue, newValue bool) {
+	if booleanValue.parentA == observable {
+		booleanValue.Set(booleanValue.parentB.Value() == newValue)
+	} else {
+		booleanValue.Set(booleanValue.parentA.Value() == newValue)
 	}
 }
 
 func (booleanValue *tBooleanNot) BooleanChanged(observable Boolean, oldValue, newValue bool) {
-	booleanValue.updateValue(!newValue)
+	booleanValue.Set(!newValue)
+}
+
+func (booleanValue *tBooleanNotEqual) BooleanChanged(observable Boolean, oldValue, newValue bool) {
+	if booleanValue.parentA == observable {
+		booleanValue.Set(booleanValue.parentB.Value() != newValue)
+	} else {
+		booleanValue.Set(booleanValue.parentA.Value() != newValue)
+	}
 }
 
 func (booleanValue *tBooleanOr) BooleanChanged(observable Boolean, oldValue, newValue bool) {
 	if booleanValue.parentA == observable {
-		booleanValue.updateValue(booleanValue.parentB.Value() || newValue)
+		booleanValue.Set(booleanValue.parentB.Value() || newValue)
 	} else {
-		booleanValue.updateValue(booleanValue.parentA.Value() || newValue)
+		booleanValue.Set(booleanValue.parentA.Value() || newValue)
 	}
 }
