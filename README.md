@@ -1,9 +1,9 @@
 # Bindings
 
-[![GoDoc](https://godoc.org/github.com/vbsw/bindings?status.svg)](https://godoc.org/github.com/vbsw/bindings) [![Go Report Card](https://goreportcard.com/badge/github.com/vbsw/bindings)](https://goreportcard.com/report/github.com/vbsw/bindings) [![Stability: Maintenance](https://masterminds.github.io/stability/maintenance.svg)](https://masterminds.github.io/stability/maintenance.html)
+[![GoDoc](https://godoc.org/github.com/vbsw/bindings?status.svg)](https://godoc.org/github.com/vbsw/bindings) [![Go Report Card](https://goreportcard.com/badge/github.com/vbsw/bindings)](https://goreportcard.com/report/github.com/vbsw/bindings) [![Stability: Experimental](https://masterminds.github.io/stability/experimental.svg)](https://masterminds.github.io/stability/experimental.html)
 
 ## About
-This package provides bindings for values. It is published on <https://github.com/vbsw/bindings>.
+This package provides bindings for values, similar to Java's property bindings. It is published on <https://github.com/vbsw/bindings>.
 
 ## Copyright
 Copyright 2019, Vitali Baumtrok (vbsw@mailbox.org).
