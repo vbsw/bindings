@@ -81,6 +81,43 @@ func TestFloat64ValueFloat64Changed(t *testing.T) {
 	}
 }
 
+func TestFloat64ValueDivide(t *testing.T) {
+	float64ValueA := new(tFloat64)
+	float64ValueB := new(tFloat64)
+	float64ValueA.Set(1)
+	float64ValueB.Set(1)
+
+	float64ValueDivide := float64ValueA.Divide(float64ValueB)
+	float64Listener := new(testFloat64Listener)
+
+	float64ValueDivide.AddListener(float64Listener)
+	if float64Listener.called != false {
+		t.Error(float64Listener.called)
+	}
+
+	float64ValueA.Set(10)
+	if float64ValueDivide.Value() != 10 {
+		t.Error(float64ValueDivide.Value())
+	}
+	if float64Listener.called != true {
+		t.Error(float64Listener.called)
+	}
+	if float64Listener.newValue != 10 {
+		t.Error(float64Listener.newValue)
+	}
+
+	float64ValueB.Set(10)
+	if float64ValueDivide.Value() != 1 {
+		t.Error(float64ValueDivide.Value())
+	}
+	if float64Listener.oldValue != 10 {
+		t.Error(float64Listener.oldValue)
+	}
+	if float64Listener.newValue != 1 {
+		t.Error(float64Listener.newValue)
+	}
+}
+
 func TestFloat64ValueEqualTo(t *testing.T) {
 	float64ValueA := new(tFloat64)
 	float64ValueB := new(tFloat64)
@@ -122,6 +159,128 @@ func TestFloat64ValueEqualTo(t *testing.T) {
 	}
 	if booleanListener.newValue != true {
 		t.Error(booleanListener.newValue)
+	}
+}
+
+func TestFloat64ValueGreaterThan(t *testing.T) {
+	float64ValueA := new(tFloat64)
+	float64ValueB := new(tFloat64)
+	booleanValueGreater := float64ValueA.GreaterThan(float64ValueB)
+	booleanListener := new(testBooleanListener)
+	initialValueA := float64ValueA.value
+	initialValueB := float64ValueB.value
+
+	booleanValueGreater.AddListener(booleanListener)
+	float64ValueA.Set(initialValueA)
+	float64ValueB.Set(initialValueB)
+	if booleanValueGreater.Value() != false {
+		t.Error(booleanValueGreater.Value())
+	}
+	if booleanListener.called != false {
+		t.Error(booleanListener.called)
+	}
+
+	float64ValueA.Set(10)
+	if booleanValueGreater.Value() != true {
+		t.Error(booleanValueGreater.Value())
+	}
+	if booleanListener.called != true {
+		t.Error(booleanListener.called)
+	}
+	if booleanListener.oldValue != false {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != true {
+		t.Error(booleanListener.newValue)
+	}
+
+	float64ValueB.Set(10)
+	if booleanValueGreater.Value() != false {
+		t.Error(booleanValueGreater.Value())
+	}
+	if booleanListener.oldValue != true {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != false {
+		t.Error(booleanListener.newValue)
+	}
+}
+
+func TestFloat64ValueGreaterThanOrEqualTo(t *testing.T) {
+	float64ValueA := new(tFloat64)
+	float64ValueB := new(tFloat64)
+	booleanValueGreaterOrEqual := float64ValueA.GreaterThanOrEqualTo(float64ValueB)
+	booleanListener := new(testBooleanListener)
+
+	booleanValueGreaterOrEqual.AddListener(booleanListener)
+	float64ValueA.Set(10)
+	if booleanValueGreaterOrEqual.Value() != true {
+		t.Error(booleanValueGreaterOrEqual.Value())
+	}
+	if booleanListener.called != true {
+		t.Error(booleanListener.called)
+	}
+	if booleanListener.oldValue != false {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != true {
+		t.Error(booleanListener.newValue)
+	}
+
+	float64ValueB.Set(10)
+	if booleanValueGreaterOrEqual.Value() != true {
+		t.Error(booleanValueGreaterOrEqual.Value())
+	}
+	if booleanListener.oldValue != false {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != true {
+		t.Error(booleanListener.newValue)
+	}
+
+	float64ValueB.Set(50)
+	if booleanValueGreaterOrEqual.Value() != false {
+		t.Error(booleanValueGreaterOrEqual.Value())
+	}
+	if booleanListener.oldValue != true {
+		t.Error(booleanListener.oldValue)
+	}
+	if booleanListener.newValue != false {
+		t.Error(booleanListener.newValue)
+	}
+}
+
+func TestFloat64ValueMinus(t *testing.T) {
+	float64ValueA := new(tFloat64)
+	float64ValueB := new(tFloat64)
+	float64ValueMinus := float64ValueA.Minus(float64ValueB)
+	float64Listener := new(testFloat64Listener)
+
+	float64ValueMinus.AddListener(float64Listener)
+	if float64Listener.called != false {
+		t.Error(float64Listener.called)
+	}
+
+	float64ValueA.Set(10)
+	if float64ValueMinus.Value() != 10 {
+		t.Error(float64ValueMinus.Value())
+	}
+	if float64Listener.called != true {
+		t.Error(float64Listener.called)
+	}
+	if float64Listener.newValue != 10 {
+		t.Error(float64Listener.newValue)
+	}
+
+	float64ValueB.Set(4)
+	if float64ValueMinus.Value() != 6 {
+		t.Error(float64ValueMinus.Value())
+	}
+	if float64Listener.oldValue != 10 {
+		t.Error(float64Listener.oldValue)
+	}
+	if float64Listener.newValue != 6 {
+		t.Error(float64Listener.newValue)
 	}
 }
 

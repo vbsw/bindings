@@ -42,13 +42,13 @@ type Float64 interface {
 }
 
 // BooleanListener is a listener for the observable Boolean. Function BooleanChanged is called
-// when observable value has changed, i.e. new value is not equal to old value.
+// only when observable value has changed, i.e. new value is not equal to old value.
 type BooleanListener interface {
 	BooleanChanged(Boolean, bool, bool)
 }
 
 // Float64Listener is a listener for the observable Float64. Function Float64Changed is called
-// when observable value has changed, i.e. new value is not equal to old value.
+// only when observable value has changed, i.e. new value is not equal to old value.
 type Float64Listener interface {
 	Float64Changed(Float64, float64, float64)
 }

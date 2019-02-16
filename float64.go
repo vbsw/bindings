@@ -24,6 +24,10 @@ type tFloat64BooleanAB struct {
 	parentB Float64
 }
 
+type tFloat64Divide struct {
+	tFloat64AB
+}
+
 type tFloat64Equal struct {
 	tFloat64BooleanAB
 }
@@ -44,8 +48,20 @@ type tFloat64LessOrEqual struct {
 	tFloat64BooleanAB
 }
 
+type tFloat64Minus struct {
+	tFloat64AB
+}
+
+type tFloat64Multiply struct {
+	tFloat64AB
+}
+
 type tFloat64NotEqual struct {
 	tFloat64BooleanAB
+}
+
+type tFloat64Plus struct {
+	tFloat64AB
 }
 
 func (float64Value *tFloat64) AddListener(listener Float64Listener) {
@@ -55,7 +71,12 @@ func (float64Value *tFloat64) AddListener(listener Float64Listener) {
 }
 
 func (float64Value *tFloat64) Divide(float64ValueB Float64) Float64 {
-	return nil
+	float64Divide := new(tFloat64Divide)
+	float64Divide.parentA = float64Value
+	float64Divide.parentB = float64ValueB
+	float64Value.AddListener(float64Divide)
+	float64ValueB.AddListener(float64Divide)
+	return float64Divide
 }
 
 func (float64Value *tFloat64) EqualTo(float64ValueB Float64) Boolean {
@@ -104,11 +125,21 @@ func (float64Value *tFloat64) LessThanOrEqualTo(float64ValueB Float64) Boolean {
 }
 
 func (float64Value *tFloat64) Minus(float64ValueB Float64) Float64 {
-	return nil
+	float64Minus := new(tFloat64Minus)
+	float64Minus.parentA = float64Value
+	float64Minus.parentB = float64ValueB
+	float64Value.AddListener(float64Minus)
+	float64ValueB.AddListener(float64Minus)
+	return float64Minus
 }
 
 func (float64Value *tFloat64) Multiply(float64ValueB Float64) Float64 {
-	return nil
+	float64Multiply := new(tFloat64Multiply)
+	float64Multiply.parentA = float64Value
+	float64Multiply.parentB = float64ValueB
+	float64Value.AddListener(float64Multiply)
+	float64ValueB.AddListener(float64Multiply)
+	return float64Multiply
 }
 
 func (float64Value *tFloat64) NotEqualTo(float64ValueB Float64) Boolean {
@@ -121,7 +152,12 @@ func (float64Value *tFloat64) NotEqualTo(float64ValueB Float64) Boolean {
 }
 
 func (float64Value *tFloat64) Plus(float64ValueB Float64) Float64 {
-	return nil
+	float64Plus := new(tFloat64Plus)
+	float64Plus.parentA = float64Value
+	float64Plus.parentB = float64ValueB
+	float64Value.AddListener(float64Plus)
+	float64ValueB.AddListener(float64Plus)
+	return float64Plus
 }
 
 func (float64Value *tFloat64) RemoveListener(listener Float64Listener) {
@@ -144,6 +180,14 @@ func (float64Value *tFloat64) Set(newValue float64) {
 
 func (float64Value *tFloat64) Value() float64 {
 	return float64Value.value
+}
+
+func (float64Value *tFloat64Divide) Float64Changed(observable Float64, oldValue, newValue float64) {
+	if float64Value.parentA == observable {
+		float64Value.Set(newValue / float64Value.parentB.Value())
+	} else {
+		float64Value.Set(float64Value.parentA.Value() / newValue)
+	}
 }
 
 func (float64Value *tFloat64Equal) Float64Changed(observable Float64, oldValue, newValue float64) {
@@ -186,10 +230,34 @@ func (float64Value *tFloat64LessOrEqual) Float64Changed(observable Float64, oldV
 	}
 }
 
+func (float64Value *tFloat64Minus) Float64Changed(observable Float64, oldValue, newValue float64) {
+	if float64Value.parentA == observable {
+		float64Value.Set(newValue - float64Value.parentB.Value())
+	} else {
+		float64Value.Set(float64Value.parentA.Value() - newValue)
+	}
+}
+
+func (float64Value *tFloat64Multiply) Float64Changed(observable Float64, oldValue, newValue float64) {
+	if float64Value.parentA == observable {
+		float64Value.Set(float64Value.parentB.Value() * newValue)
+	} else {
+		float64Value.Set(float64Value.parentA.Value() * newValue)
+	}
+}
+
 func (float64Value *tFloat64NotEqual) Float64Changed(observable Float64, oldValue, newValue float64) {
 	if float64Value.parentA == observable {
 		float64Value.Set(float64Value.parentB.Value() != newValue)
 	} else {
 		float64Value.Set(float64Value.parentA.Value() != newValue)
+	}
+}
+
+func (float64Value *tFloat64Plus) Float64Changed(observable Float64, oldValue, newValue float64) {
+	if float64Value.parentA == observable {
+		float64Value.Set(float64Value.parentB.Value() + newValue)
+	} else {
+		float64Value.Set(float64Value.parentA.Value() + newValue)
 	}
 }
