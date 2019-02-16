@@ -37,6 +37,16 @@ func containsIntListener(list []IntListener, key IntListener) bool {
 	return false
 }
 
+// containsStringListener returns true, if list contains key.
+func containsStringListener(list []StringListener, key StringListener) bool {
+	for _, currentKey := range list {
+		if currentKey == key {
+			return true
+		}
+	}
+	return false
+}
+
 // indexBooleanListener returns index of key in list. If list does not contain key, returns -1.
 func indexBooleanListener(list []BooleanListener, key BooleanListener) int {
 	for i, currentKey := range list {
@@ -67,6 +77,16 @@ func indexIntListener(list []IntListener, key IntListener) int {
 	return -1
 }
 
+// indexStringListener returns index of key in list. If list does not contain key, returns -1.
+func indexStringListener(list []StringListener, key StringListener) int {
+	for i, currentKey := range list {
+		if currentKey == key {
+			return i
+		}
+	}
+	return -1
+}
+
 // removeBooleanListener removes an entry from list.
 func removeBooleanListener(list []BooleanListener, index int) []BooleanListener {
 	copy(list[index:], list[index+1:])
@@ -81,6 +101,12 @@ func removeFloat64Listener(list []Float64Listener, index int) []Float64Listener 
 
 // removeIntListener removes an entry from list.
 func removeIntListener(list []IntListener, index int) []IntListener {
+	copy(list[index:], list[index+1:])
+	return list[:len(list)-1]
+}
+
+// removeStringListener removes an entry from list.
+func removeStringListener(list []StringListener, index int) []StringListener {
 	copy(list[index:], list[index+1:])
 	return list[:len(list)-1]
 }

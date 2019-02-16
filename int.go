@@ -190,9 +190,6 @@ func (intValue *tInt) Value() int {
 	return intValue.value
 }
 
-func (intValue *tInt) initValueFromOtherTypes(untypedValue interface{}) {
-}
-
 func (intValue *tIntDivide) IntChanged(observable Int, oldValue, newValue int) {
 	if intValue.parentA == observable {
 		intValue.Set(newValue / intValue.parentB.Value())

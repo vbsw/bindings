@@ -95,6 +95,34 @@ type IntListener interface {
 	IntChanged(Int, int, int)
 }
 
+// String is an observable value.
+type String interface {
+	AddListener(StringListener)
+	Append(String) String
+	EqualTo(String) Boolean
+	GreaterThan(String) Boolean
+	GreaterThanOrEqualTo(String) Boolean
+	LessThan(String) Boolean
+	LessThanOrEqualTo(String) Boolean
+	LowerCase() String
+	NotEqualTo(String) Boolean
+	RemoveListener(StringListener)
+	Set(string)
+	SetFilter(StringFilter)
+	Value() string
+}
+
+// StringFilter provides a function that is called before setting the value of String.
+type StringFilter interface {
+	FilterString(String, string, string) string
+}
+
+// StringListener is a listener for the observable String. Function StringChanged is called
+// only when observable value has changed, i.e. new value is not equal to old value.
+type StringListener interface {
+	StringChanged(String, string, string)
+}
+
 // NewBoolean creates the observable Boolean and returns it.
 func NewBoolean(params ...interface{}) Boolean {
 	booleanValue := new(tBoolean)

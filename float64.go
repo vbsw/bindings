@@ -190,9 +190,6 @@ func (float64Value *tFloat64) Value() float64 {
 	return float64Value.value
 }
 
-func (float64Value *tFloat64) initValueFromOtherTypes(untypedValue interface{}) {
-}
-
 func (float64Value *tFloat64Divide) Float64Changed(observable Float64, oldValue, newValue float64) {
 	if float64Value.parentA == observable {
 		float64Value.Set(newValue / float64Value.parentB.Value())
