@@ -7,7 +7,7 @@
 
 // Package bindings provides bindings for values.
 //
-// Version 0.3.0.
+// Version 0.4.0.
 package bindings
 
 // Boolean is an observable value.
@@ -15,12 +15,14 @@ type Boolean interface {
 	AddListener(BooleanListener)
 	And(Boolean) Boolean
 	EqualTo(Boolean) Boolean
+	Int() Int
 	Not() Boolean
 	NotEqualTo(Boolean) Boolean
 	Or(Boolean) Boolean
 	RemoveListener(BooleanListener)
 	Set(bool)
 	SetFilter(BooleanFilter)
+	String() String
 	Value() bool
 }
 
@@ -40,8 +42,10 @@ type Float64 interface {
 	AddListener(Float64Listener)
 	Divide(Float64) Float64
 	EqualTo(Float64) Boolean
+	Float32() Float32
 	GreaterThan(Float64) Boolean
 	GreaterThanOrEqualTo(Float64) Boolean
+	Int() Int
 	LessThan(Float64) Boolean
 	LessThanOrEqualTo(Float64) Boolean
 	Minus(Float64) Float64
@@ -51,6 +55,7 @@ type Float64 interface {
 	RemoveListener(Float64Listener)
 	Set(float64)
 	SetFilter(Float64Filter)
+	String() String
 	Value() float64
 }
 
@@ -70,8 +75,10 @@ type Float32 interface {
 	AddListener(Float32Listener)
 	Divide(Float32) Float32
 	EqualTo(Float32) Boolean
+	Float64() Float64
 	GreaterThan(Float32) Boolean
 	GreaterThanOrEqualTo(Float32) Boolean
+	Int() Int
 	LessThan(Float32) Boolean
 	LessThanOrEqualTo(Float32) Boolean
 	Minus(Float32) Float32
@@ -81,6 +88,7 @@ type Float32 interface {
 	RemoveListener(Float32Listener)
 	Set(float32)
 	SetFilter(Float32Filter)
+	String() String
 	Value() float32
 }
 
@@ -100,6 +108,8 @@ type Int interface {
 	AddListener(IntListener)
 	Divide(Int) Int
 	EqualTo(Int) Boolean
+	Float64() Float64
+	Float32() Float32
 	GreaterThan(Int) Boolean
 	GreaterThanOrEqualTo(Int) Boolean
 	LessThan(Int) Boolean
@@ -111,6 +121,7 @@ type Int interface {
 	RemoveListener(IntListener)
 	Set(int)
 	SetFilter(IntFilter)
+	String() String
 	Value() int
 }
 
@@ -129,9 +140,13 @@ type IntListener interface {
 type String interface {
 	AddListener(StringListener)
 	Append(String) String
+	Boolean() Boolean
 	EqualTo(String) Boolean
+	Float64() Float64
+	Float32() Float32
 	GreaterThan(String) Boolean
 	GreaterThanOrEqualTo(String) Boolean
+	Int() Int
 	LessThan(String) Boolean
 	LessThanOrEqualTo(String) Boolean
 	LowerCase() String
