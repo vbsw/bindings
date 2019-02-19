@@ -7,7 +7,10 @@
 
 package bindings
 
-import "strings"
+import (
+	"strconv"
+	"strings"
+)
 
 type tString struct {
 	listeners []StringListener
@@ -74,6 +77,12 @@ func (stringValue *tString) Append(stringValueB String) String {
 	return stringAppend
 }
 
+func (stringValue *tString) Boolean() Boolean {
+	booleanValue := new(tBoolean)
+	stringValue.AddListener(booleanValue)
+	return booleanValue
+}
+
 func (stringValue *tString) EqualTo(stringValueB String) Boolean {
 	stringEqual := new(tStringEqual)
 	stringEqual.parentA = stringValue
@@ -81,6 +90,18 @@ func (stringValue *tString) EqualTo(stringValueB String) Boolean {
 	stringValue.AddListener(stringEqual)
 	stringValueB.AddListener(stringEqual)
 	return stringEqual
+}
+
+func (stringValue *tString) Float64() Float64 {
+	float64Value := new(tFloat64)
+	stringValue.AddListener(float64Value)
+	return float64Value
+}
+
+func (stringValue *tString) Float32() Float32 {
+	float32Value := new(tFloat32)
+	stringValue.AddListener(float32Value)
+	return float32Value
 }
 
 func (stringValue *tString) GreaterThan(stringValueB String) Boolean {
@@ -99,6 +120,12 @@ func (stringValue *tString) GreaterThanOrEqualTo(stringValueB String) Boolean {
 	stringValue.AddListener(stringGreaterOrEqual)
 	stringValueB.AddListener(stringGreaterOrEqual)
 	return stringGreaterOrEqual
+}
+
+func (stringValue *tString) Int() Int {
+	intValue := new(tInt)
+	stringValue.AddListener(intValue)
+	return intValue
 }
 
 func (stringValue *tString) LessThan(stringValueB String) Boolean {
@@ -161,6 +188,26 @@ func (stringValue *tString) SetFilter(filter StringFilter) {
 
 func (stringValue *tString) Value() string {
 	return stringValue.value
+}
+
+func (stringValue *tString) Float64Changed(observable Float64, oldValue, newValue float64) {
+	stringValue.Set(strconv.FormatFloat(newValue, 'f', -1, 64))
+}
+
+func (stringValue *tString) Float32Changed(observable Float32, oldValue, newValue float32) {
+	stringValue.Set(strconv.FormatFloat(float64(newValue), 'f', -1, 32))
+}
+
+func (stringValue *tString) IntChanged(observable Int, oldValue, newValue int) {
+	stringValue.Set(strconv.Itoa(newValue))
+}
+
+func (stringValue *tString) BooleanChanged(observable Boolean, oldValue, newValue bool) {
+	if newValue {
+		stringValue.Set("true")
+	} else {
+		stringValue.Set("false")
+	}
 }
 
 func (stringValue *tStringAppend) StringChanged(observable String, oldValue, newValue string) {

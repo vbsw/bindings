@@ -7,6 +7,8 @@
 
 package bindings
 
+import "strconv"
+
 type tInt struct {
 	listeners []IntListener
 	value     int
@@ -87,6 +89,18 @@ func (intValue *tInt) EqualTo(intValueB Int) Boolean {
 	intValue.AddListener(intEqual)
 	intValueB.AddListener(intEqual)
 	return intEqual
+}
+
+func (intValue *tInt) Float64() Float64 {
+	float64Value := new(tFloat64)
+	intValue.AddListener(float64Value)
+	return float64Value
+}
+
+func (intValue *tInt) Float32() Float32 {
+	float32Value := new(tFloat32)
+	intValue.AddListener(float32Value)
+	return float32Value
 }
 
 func (intValue *tInt) GreaterThan(intValueB Int) Boolean {
@@ -186,8 +200,36 @@ func (intValue *tInt) SetFilter(filter IntFilter) {
 	intValue.filter = filter
 }
 
+func (intValue *tInt) String() String {
+	stringValue := new(tString)
+	intValue.AddListener(stringValue)
+	return stringValue
+}
+
 func (intValue *tInt) Value() int {
 	return intValue.value
+}
+
+func (intValue *tInt) BooleanChanged(observable Boolean, oldValue, newValue bool) {
+	if newValue {
+		intValue.Set(1)
+	} else {
+		intValue.Set(0)
+	}
+}
+
+func (intValue *tInt) Float64Changed(observable Float64, oldValue, newValue float64) {
+	intValue.Set(int(newValue))
+}
+
+func (intValue *tInt) Float32Changed(observable Float32, oldValue, newValue float32) {
+	intValue.Set(int(newValue))
+}
+
+func (intValue *tInt) StringChanged(observable String, oldValue, newValue string) {
+	if val, err := strconv.Atoi(newValue); err == nil {
+		intValue.Set(val)
+	}
 }
 
 func (intValue *tIntDivide) IntChanged(observable Int, oldValue, newValue int) {

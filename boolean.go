@@ -63,6 +63,12 @@ func (booleanValue *tBoolean) EqualTo(booleanValueB Boolean) Boolean {
 	return booleanValueEqual
 }
 
+func (booleanValue *tBoolean) Int() Int {
+	intValue := new(tInt)
+	booleanValue.AddListener(intValue)
+	return intValue
+}
+
 func (booleanValue *tBoolean) Not() Boolean {
 	booleanValueNot := new(tBooleanNot)
 	booleanValue.AddListener(booleanValueNot)
@@ -112,8 +118,22 @@ func (booleanValue *tBoolean) SetFilter(filter BooleanFilter) {
 	booleanValue.filter = filter
 }
 
+func (booleanValue *tBoolean) String() String {
+	stringValue := new(tString)
+	booleanValue.AddListener(stringValue)
+	return stringValue
+}
+
 func (booleanValue *tBoolean) Value() bool {
 	return booleanValue.value
+}
+
+func (booleanValue *tBoolean) StringChanged(observable String, oldValue, newValue string) {
+	if newValue == "true" || newValue == "1" || newValue == "yes" {
+		booleanValue.Set(true)
+	} else {
+		booleanValue.Set(false)
+	}
 }
 
 func (booleanValue *tBooleanAnd) BooleanChanged(observable Boolean, oldValue, newValue bool) {

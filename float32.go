@@ -7,6 +7,8 @@
 
 package bindings
 
+import "strconv"
+
 type tFloat32 struct {
 	listeners []Float32Listener
 	value     float32
@@ -89,6 +91,12 @@ func (float32Value *tFloat32) EqualTo(float32ValueB Float32) Boolean {
 	return float32Equal
 }
 
+func (float32Value *tFloat32) Float64() Float64 {
+	float64Value := new(tFloat64)
+	float32Value.AddListener(float64Value)
+	return float64Value
+}
+
 func (float32Value *tFloat32) GreaterThan(float32ValueB Float32) Boolean {
 	float32Greater := new(tFloat32Greater)
 	float32Greater.parentA = float32Value
@@ -105,6 +113,12 @@ func (float32Value *tFloat32) GreaterThanOrEqualTo(float32ValueB Float32) Boolea
 	float32Value.AddListener(float32GreaterOrEqual)
 	float32ValueB.AddListener(float32GreaterOrEqual)
 	return float32GreaterOrEqual
+}
+
+func (float32Value *tFloat32) Int() Int {
+	intValue := new(tInt)
+	float32Value.AddListener(intValue)
+	return intValue
 }
 
 func (float32Value *tFloat32) LessThan(float32ValueB Float32) Boolean {
@@ -186,8 +200,28 @@ func (float32Value *tFloat32) SetFilter(filter Float32Filter) {
 	float32Value.filter = filter
 }
 
+func (float32Value *tFloat32) String() String {
+	stringValue := new(tString)
+	float32Value.AddListener(stringValue)
+	return stringValue
+}
+
 func (float32Value *tFloat32) Value() float32 {
 	return float32Value.value
+}
+
+func (float32Value *tFloat32) Float64Changed(observable Float64, oldValue, newValue float64) {
+	float32Value.Set(float32(newValue))
+}
+
+func (float32Value *tFloat32) IntChanged(observable Int, oldValue, newValue int) {
+	float32Value.Set(float32(newValue))
+}
+
+func (float32Value *tFloat32) StringChanged(observable String, oldValue, newValue string) {
+	if val, err := strconv.ParseFloat(newValue, 32); err == nil {
+		float32Value.Set(float32(val))
+	}
 }
 
 func (float32Value *tFloat32Divide) Float32Changed(observable Float32, oldValue, newValue float32) {
